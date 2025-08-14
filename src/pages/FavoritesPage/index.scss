@@ -1,0 +1,28 @@
+.favorites-page {
+  padding: 20px;
+  background-color: #333333;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  max-width: 1200px;
+  margin: 20px auto;
+
+  h1 {
+    font-size: 1.6rem;
+    color: #ffd700;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .no-favorites {
+    color: #bbb;
+    text-align: center;
+    font-size: 1.2rem;
+  }
+
+  .user-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+  }
+}

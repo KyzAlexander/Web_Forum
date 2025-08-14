@@ -1,0 +1,51 @@
+.user-edit-form {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+
+.user-edit-form label {
+  font-size: 1.1rem;
+  color: #ddd;
+}
+
+.user-edit-form input {
+  padding: 12px;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background-color: #444;
+  color: #e0e0e0;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+
+  &::placeholder {
+    color: #888;
+  }
+}
+
+.user-edit-form button { 
+  max-width: 100px;
+  width: 100%;   
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #218838;
+  }
+}
