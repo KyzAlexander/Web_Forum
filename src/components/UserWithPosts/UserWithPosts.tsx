@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { FaStar } from "react-icons/fa";
-
+import CommentsSection from "../CommentsSection/CommentsSection";
 import "./index.scss";
 
 interface User {
@@ -75,23 +75,13 @@ const UserWithPosts: React.FC<IUserWithPostsProps> = ({
               <FaStar size={30} color={post.favorite ? "#ffd700" : "#ccc"} />
             </div>
           </div>
-          <div className="comments-toggle-btn">
-            <button onClick={() => onToggleComments(post.id)}>
-              {openComments[post.id] ? "Hide Comments" : "Show Comments"}
-            </button>
-          </div>
-          {openComments[post.id] && (
-            <div className="comments-section">
-              <h4>Comments</h4>
-              <ul>
-                {(comments[post.id] || []).map((comment) => (
-                  <li key={comment.id}>
-                    <p>{comment.body}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+
+          <CommentsSection
+            postId={post.id}
+            comments={comments[post.id] || []}
+            isOpen={openComments[post.id] || false}
+            onToggle={onToggleComments}
+          />
         </div>
       ))}
     </div>

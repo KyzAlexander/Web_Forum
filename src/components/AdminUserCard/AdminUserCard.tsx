@@ -7,7 +7,7 @@ import {
   swapPosts,
 } from "../../redux/slices/postsSlice";
 import { AppDispatch } from "../../redux/store";
-
+import CommentsSection from "../CommentsSection/CommentsSection";
 import "./index.scss";
 
 interface User {
@@ -134,23 +134,13 @@ const AdminUserCard: React.FC<IAdminUserCardProps> = ({ user, posts, comments, o
               </button>
             )}
           </div>
-          <div className="comments-toggle-btn">
-            <button onClick={() => onToggleComments(post.id)}>
-              {openComments[post.id] ? "Hide Comments" : "Show Comments"}
-            </button>
-          </div>
-          {openComments[post.id] && (
-            <div className="comments-section">
-              <h4>Comments</h4>
-              <ul>
-                {(comments[post.id] || []).map((comment) => (
-                  <li key={comment.id}>
-                    <p>{comment.body}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+
+          <CommentsSection
+            postId={post.id}
+            comments={comments[post.id] || []}
+            isOpen={openComments[post.id] || false}
+            onToggle={onToggleComments}
+          />
         </div>
       ))}
     </div>

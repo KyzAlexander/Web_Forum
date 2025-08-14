@@ -1,0 +1,27 @@
+.filter {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  label {
+    margin-right: 10px;
+    font-size: 1rem;
+    color: #b0b0b0;
+  }
+
+  select {
+    padding: 8px 12px;
+    font-size: 1rem;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #444;
+    color: #e0e0e0;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+  }
+}

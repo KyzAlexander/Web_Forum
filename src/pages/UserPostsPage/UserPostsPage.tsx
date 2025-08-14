@@ -13,6 +13,8 @@ import UserWithPosts from "../../components/UserWithPosts/UserWithPosts";
 import Loader from "../../components/Loader/Loader";
 import BackToLoginButton from "../../components/BackToLoginButton/BackToLoginButton";
 import FavoritesPostsButton from "../../components/FavoritesPostsButton/FavoritesPostsButton";
+import Pagination from "../../components/Pagination/Pagination";
+import UserFilter from "../../components/UserFilter/UserFilter";
 import "./index.scss";
 
 const UserPostsPage: React.FC = () => {
@@ -63,7 +65,6 @@ const UserPostsPage: React.FC = () => {
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
-  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
   // Группируем посты по пользователям для UserWithPosts
   const groupedByUser = currentPosts.reduce((acc: Record<number, typeof currentPosts>, post) => {
@@ -72,39 +73,6 @@ const UserPostsPage: React.FC = () => {
     return acc;
   }, {});
 
-  const getPageNumbers = () => {
-    const pages: (number | string)[] = [];
-
-    if (totalPages <= 7) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (currentPage <= 4) {
-        pages.push(1, 2, 3, 4, "...", totalPages - 2, totalPages - 1, totalPages);
-      } else if (currentPage >= totalPages - 3) {
-        pages.push(1, 2, 3, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
-      } else {
-        pages.push(
-          1,
-          "...",
-          currentPage - 1,
-          currentPage,
-          currentPage + 1,
-          "...",
-          totalPages
-        );
-      }
-    }
-    return pages;
-  };
-
-  // Прокрутка к началу списка при смене страницы
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
     <>
       {isLoading ? (
@@ -112,23 +80,15 @@ const UserPostsPage: React.FC = () => {
       ) : (
         <div className="user-posts-page">
           <h1>User Posts</h1>
-          <div className="filter">
-            <label>Filter by user:</label>
-            <select
-              value={filteredUserId || ""}
-              onChange={(e) => {
-                setFilteredUserId(Number(e.target.value) || null)
-                setCurrentPage(1) // сброс на первую страницу
-              }}
-            >
-              <option value="">All Users</option>
-              {users.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.name}
-                </option>
-              ))}
-            </select>
-          </div>
+
+          <UserFilter
+            users={users}
+            value={filteredUserId}
+            onChange={(val) => {
+              setFilteredUserId(val);
+              setCurrentPage(1); // сброс на первую страницу
+            }} />
+
           <div className="user-list">
             {Object.entries(groupedByUser).map(([userId, userPosts]) => {
               const user = users.find((u) => u.id === Number(userId));
@@ -149,43 +109,14 @@ const UserPostsPage: React.FC = () => {
               );
             })}
           </div>
-
-          {totalPages > 1 && (
-            <div className="pagination">
-              <button
-                disabled={currentPage === 1}
-                onClick={() => handlePageChange(currentPage - 1)}
-              >
-                Prev
-              </button>
-
-              {getPageNumbers().map((page, index) => {
-                if (page === "...") {
-                  return (
-                    <span key={`dots-${index}`} className="dots">
-                      ...
-                    </span>
-                  );
-                }
-                return (
-                  <button
-                    key={page}
-                    className={currentPage === page ? "active" : ""}
-                    onClick={() => handlePageChange(page as number)}
-                  >
-                    {page}
-                  </button>
-                );
-              })}
-
-              <button
-                disabled={currentPage === totalPages}
-                onClick={() => handlePageChange(currentPage + 1)}
-              >
-                Next
-              </button>
-            </div>
-          )}
+          <Pagination
+            totalItems={filteredPosts.length}
+            itemsPerPage={postsPerPage}
+            currentPage={currentPage}
+            onPageChange={(page) => {
+              setCurrentPage(page);
+            }}
+          />
           <BackToLoginButton />
           <FavoritesPostsButton />
         </div>

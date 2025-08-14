@@ -6,6 +6,8 @@ import { AppDispatch, RootState } from "../../redux/store";
 import AdminUserCard from "../../components/AdminUserCard/AdminUserCard";
 import Loader from "../../components/Loader/Loader";
 import BackToLoginButton from "../../components/BackToLoginButton/BackToLoginButton";
+import Pagination from "../../components/Pagination/Pagination";
+import UserFilter from "../../components/UserFilter/UserFilter";
 import "./index.scss";
 
 const AdminPage: React.FC = () => {
@@ -46,44 +48,11 @@ const AdminPage: React.FC = () => {
       ? users.filter((u) => u.id === filteredUserId)
       : users;
 
-  const totalPages = filteredUsers.length;
   const currentUser = filteredUsers[currentPage - 1];
 
   const currentUserPosts = currentUser
     ? posts.filter((p) => p.userId === currentUser.id)
     : [];
-
-  const getPageNumbers = () => {
-    if (totalPages <= 7)
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
-
-    if (currentPage <= 4) {
-      return [1, 2, 3, 4, "...", totalPages];
-    }
-    if (currentPage >= totalPages - 3) {
-      return [
-        1,
-        "...",
-        totalPages - 3,
-        totalPages - 2,
-        totalPages - 1,
-        totalPages,
-      ];
-    }
-    return [
-      1,
-      "...",
-      currentPage - 1,
-      currentPage,
-      currentPage + 1,
-      "...",
-      totalPages,
-    ];
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
 
   // Сброс пагинации при смене фильтра
   useEffect(() => {
@@ -94,23 +63,11 @@ const AdminPage: React.FC = () => {
     <div className="admin-page">
       <h1 className="admin-page__title">Admin Panel</h1>
 
-      <div className="filter">
-        <label>Filter by user:</label>
-        <select
-          value={filteredUserId || ""}
-          onChange={(e) => {
-            const val = Number(e.target.value);
-            setFilteredUserId(val || null);
-          }}
-        >
-          <option value="">All Users</option>
-          {users.map((user) => (
-            <option key={user.id} value={user.id}>
-              {user.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <UserFilter
+        users={users}
+        value={filteredUserId}
+        onChange={(val) => setFilteredUserId(val)}
+      />
 
       <h2 className="admin-page__section-title">Users</h2>
       {isLoading ? (
@@ -126,40 +83,13 @@ const AdminPage: React.FC = () => {
       ) : (
         <p>No users found.</p>
       )}
-
-      {/* Пагинация только если нет фильтра */}
-      {filteredUserId === null && totalPages > 1 && (
-        <div className="pagination">
-          <button
-            disabled={currentPage === 1}
-            onClick={() => handlePageChange(currentPage - 1)}
-          >
-            Prev
-          </button>
-
-          {getPageNumbers().map((page, idx) =>
-            page === "..." ? (
-              <span key={idx} className="dots">
-                ...
-              </span>
-            ) : (
-              <button
-                key={idx}
-                className={currentPage === page ? "active" : ""}
-                onClick={() => handlePageChange(page as number)}
-              >
-                {page}
-              </button>
-            )
-          )}
-
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => handlePageChange(currentPage + 1)}
-          >
-            Next
-          </button>
-        </div>
+      {filteredUserId === null && (
+        <Pagination
+          totalItems={filteredUsers.length}
+          itemsPerPage={1}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
       )}
       <BackToLoginButton />
     </div>
