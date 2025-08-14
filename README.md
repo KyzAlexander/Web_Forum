@@ -1,6 +1,6 @@
 # Web_Forum
 
-## [Deploy](https://web-forum1.netlify.app/admin-dashboard)
+## [Deploy](https://web-forum1.netlify.app)
 
 Небольшое описание как пользоваться форумом.
 
